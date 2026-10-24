@@ -156,10 +156,44 @@ python ../run_PLACER.py --ifile inputs/denovo_SER_hydrolase.pdb --odir example_o
 <a id="api_usage"></a>
 ## Python API usage
 
-PLACER is available as a Python-importable module, although currently not pip-installable:
+### Editable installation
+
+After setting up and activating the appropriate Conda environment described above,
+run this command from the PLACER repository root:
+
+```bash
+python -m pip install -e . --no-deps
 ```
-import sys
-sys.path.append("<PLACER_path>")
+
+The distribution name is `baker-placer`; the Python import remains `PLACER`.
+This installs PLACER without resolving or changing its scientific dependencies.
+Pip may download build tools into a temporary isolated build environment.
+Python 3.10 or newer is allowed by the package metadata; this packaging change
+has been validated on Python 3.10 under WSL2. Newer Python versions and the
+existing Apple Silicon environment require separate validation.
+
+This first packaging version supports editable installation from a retained
+checkout. Keep its `data/` and `weights/` directories in place: they are required
+at runtime and are not included in a standalone wheel. Regular non-editable
+installation, installation directly from a Git URL, and PyPI installation are
+not supported by this initial configuration. Scientific dependencies still
+need the appropriate environment even for imports and CLI help.
+
+After editable installation, `import PLACER` works outside the repository
+without adding the checkout to `sys.path`. Input and output paths remain
+relative to the current working directory unless absolute paths are supplied.
+The existing `python run_PLACER.py ...` invocation from the repository is
+unchanged. From another directory, use the absolute path to that script or:
+
+```bash
+python -m run_PLACER --help
+```
+
+### API example
+
+After editable installation:
+
+```python
 import PLACER
 
 pdbfile = "examples/dnHEM1.pdb"

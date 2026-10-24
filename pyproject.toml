@@ -1,0 +1,27 @@
+[build-system]
+requires = ["setuptools>=77"]
+build-backend = "setuptools.build_meta"
+
+[project]
+name = "baker-placer"
+version = "0.1.0.dev0"
+description = "Python interface to the Baker Laboratory PLACER model"
+readme = "README.md"
+requires-python = ">=3.10"
+license = "BSD-3-Clause"
+license-files = ["LICENSE"]
+# Scientific dependencies are provisioned through the documented Conda environment.
+# This initial packaging configuration supports editable installation only.
+
+[project.urls]
+Repository = "https://github.com/baker-laboratory/PLACER"
+
+[tool.setuptools]
+py-modules = ["PLACER", "run_PLACER"]
+packages = [
+    "modules",
+    "modules.pdbx",
+    "modules.pdbx.reader",
+    "modules.pdbx.writer",
+]
+include-package-data = false
