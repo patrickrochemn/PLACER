@@ -52,6 +52,11 @@ conda env create -f envs/placer_env.yml
 conda activate placer_env
 ```
 
+### Linux / NVIDIA container
+
+For an isolated inference environment, see the [container build and usage instructions](docker/README.md).
+The container includes the checkpoint and chemical resources and is separate from the native Conda setup.
+
 ### For Mac users
 
 A specific conda environment is necessary for running PLACER on the gpu of Apple Silicon using mps. It is based on [SE3Transformer adapted for mps by YaoYingYing](https://github.com/YaoYinYing/SE3Transformer)<br>
