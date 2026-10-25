@@ -44,5 +44,40 @@ ligand-docking accuracy.
 
 Build, CLI, GPU, and inference logs and a machine-readable output summary were
 saved outside the checkout. No registry image was published. Native Linux hosts,
-other NVIDIA GPUs, CPU inference, Apple Silicon, and new Python versions were
+other NVIDIA GPUs, CPU inference, ARM64/macOS, and new Python versions were
 not validated.
+
+## Runtime hardening pass, October 24, 2026
+
+The hardened image was built and tested separately as
+`placer:cuda12.1-hardened`, image
+`sha256:27e5a776d15f94ea0f7683f96b88f919ec1cd9c0a6cf2d8cd5550957ad17a43e`.
+It occupies 8,354,578,034 bytes (8.35 GB); runtime ownership changes did not add
+another environment-sized layer. PLACER provenance/description/license labels
+replaced the inherited micromamba application labels. The tested source label
+was `ee19de0-dirty`, indicating the hardening changes were not committed yet.
+
+| Hardening check | Result |
+| --- | --- |
+| Default runtime UID is non-root (57439) | PASS |
+| Application, model resources, Python prefix, and working directory root-owned | PASS |
+| Runtime user denied writes to application/environment without read-only mount enforcement | PASS |
+| Read-only root filesystem and writable bounded `/tmp` tmpfs | PASS |
+| Effective and bounding Linux capability sets empty | PASS |
+| `NoNewPrivs` enabled and process limit 256 | PASS |
+| PLACER import and CUDA tensor operation under restricted profile | PASS |
+| CLI help under restricted profile without GPU/network | PASS |
+| Offline GPU inference, arbitrary UID/GID 1000:1000, only output folder mounted | PASS |
+| One score row, finite scores, one PDB model with finite coordinates | PASS |
+| Host environment, pip branch, scientific files, and dependency lock unchanged | PASS |
+
+The restricted run produced 595 ATOM/HETATM records. Its log and
+machine-readable validation summary are outside the checkout under
+`/tmp/placer-container-validation-20261024/`. This was a stochastic operational
+check rather than a scientific equivalence benchmark.
+
+Dependency scanning found outstanding critical/high findings. See
+[SECURITY.md](SECURITY.md) for counts, coverage, and remediation limitations.
+Runtime restriction checks passed; dependency vulnerabilities were not silently
+suppressed or represented as fixed. Native Linux hosts and hardware other than
+the tested Windows/WSL2 RTX 3080 setup remain unvalidated.
